@@ -1,0 +1,121 @@
+definitions:
+  models.Orders:
+    properties:
+      buyer_id:
+        type: integer
+      id:
+        type: integer
+      orderDate:
+        type: string
+      product:
+        $ref: '#/definitions/models.Products'
+      product_id:
+        type: integer
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/models.Users'
+    type: object
+  models.Products:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      price:
+        type: integer
+      product_name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.Users:
+    properties:
+      address:
+        type: string
+      createdAt:
+        type: string
+      fullName:
+        type: string
+      id:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Mini E-commerce REST API Documentation
+  title: Mini E-commerce REST API
+  version: "0.1"
+paths:
+  /orders:
+    get:
+      description: Get list of all available Orders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Orders'
+            type: array
+      summary: Get Orders
+      tags:
+      - Order
+    post:
+      description: Create new Order
+      parameters:
+      - description: Order Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Orders'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Post Order
+      tags:
+      - Order
+  /products:
+    get:
+      description: Get list of all available Products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Products'
+            type: array
+      summary: Get Product
+      tags:
+      - Product
+    post:
+      description: Create new Product
+      parameters:
+      - description: product data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Products'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Post Product
+      tags:
+      - Product
+swagger: "2.0"

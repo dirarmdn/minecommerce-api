@@ -10,6 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Get Orders
+// @Description Get list of all available Orders
+// @Tags Order
+// @Produce json
+// @Success 200 {array} models.Orders
+// @Router /orders [get]
 func IndexOrders(ctx *gin.Context) {
 	var orders []models.Orders
 
@@ -23,15 +29,23 @@ func IndexOrders(ctx *gin.Context) {
 
 }
 
+// @Summary Post Order
+// @Description Create new Order
+// @Tags Order
+// @Produce json
+// @Param data body models.Orders true "Order Data"
+// @Success 200 {string} data successfully added
+// @Router /orders [post]
 func StoreOrder(ctx *gin.Context) {
 	var order models.Orders
 
-	err := ctx.ShouldBindJSON(&order)
-	if err != nil {
+	//  attempts to bind the JSON data from the HTTP request body to the order variable
+	if err := ctx.ShouldBindJSON(&order); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
+	// check if product exist or no
 	var product models.Products
 	result := config.DB.Where("ID = ?", order.ProductId).First(&product)
 	if result.Error != nil {
@@ -47,12 +61,12 @@ func StoreOrder(ctx *gin.Context) {
 		OrderDate: time.Now(),
 	}
 
-	err = config.DB.Create(&newOrder).Error
-	if err != nil {
+	// store data
+	if err := config.DB.Create(&newOrder).Error; err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, "data successfuly added")
+	ctx.JSON(http.StatusOK, "data successfully added")
 
 }
