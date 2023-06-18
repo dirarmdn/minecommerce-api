@@ -16,6 +16,129 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/order": {
+            "post": {
+                "description": "Store new Order",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Post Order",
+                "parameters": [
+                    {
+                        "description": "Order Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.StoreOrderInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/{id}": {
+            "get": {
+                "description": "Get Order by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Get Order by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Orders"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Order",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Delete Order",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update Order",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Update Order",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Order data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.UpdateOrderInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/orders": {
             "get": {
                 "description": "Get list of all available Orders",
@@ -37,24 +160,118 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/product": {
             "post": {
-                "description": "Create new Order",
+                "description": "Create new Product",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Order"
+                    "Product"
                 ],
-                "summary": "Post Order",
+                "summary": "Store Product",
                 "parameters": [
                     {
-                        "description": "Order Data",
+                        "description": "product data",
                         "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Orders"
+                            "$ref": "#/definitions/controllers.StoreProductInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/{id}": {
+            "get": {
+                "description": "Show Product by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get Product by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Products"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Product",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Delete Product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update Product",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update Product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Product data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.UpdateProductInput"
                         }
                     }
                 ],
@@ -77,7 +294,7 @@ const docTemplate = `{
                 "tags": [
                     "Product"
                 ],
-                "summary": "Get Product",
+                "summary": "Get Products",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -89,39 +306,57 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Create new Product",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Post Product",
-                "parameters": [
-                    {
-                        "description": "product data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Products"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
             }
         }
     },
     "definitions": {
+        "controllers.StoreOrderInput": {
+            "type": "object",
+            "properties": {
+                "buyer_id": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.StoreProductInput": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "product_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.UpdateOrderInput": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.UpdateProductInput": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "product_name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Orders": {
             "type": "object",
             "properties": {

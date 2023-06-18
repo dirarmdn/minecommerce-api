@@ -28,11 +28,17 @@ func main() {
 
 	// Products
 	g.GET("/products", controllers.IndexProduct)
-	g.POST("/products", controllers.StoreProduct)
+	g.GET("/product/:id", controllers.ShowProduct)
+	g.POST("/product", controllers.StoreProduct)
+	g.PATCH("/product/:id", controllers.UpdateProduct)
+	g.DELETE("/product/:id", controllers.DeleteProduct)
 
 	// Orders
 	g.GET("/orders", controllers.IndexOrders)
-	g.POST("/orders", controllers.StoreOrder)
+	g.GET("/order/:id", controllers.ShowOrder)
+	g.POST("/order", controllers.StoreOrder)
+	g.PATCH("/order/:id", controllers.UpdateOrder)
+	g.DELETE("order/:id", controllers.DeleteOrder)
 
 	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

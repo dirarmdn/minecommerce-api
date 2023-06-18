@@ -1,4 +1,34 @@
 definitions:
+  controllers.StoreOrderInput:
+    properties:
+      buyer_id:
+        type: integer
+      product_id:
+        type: integer
+    type: object
+  controllers.StoreProductInput:
+    properties:
+      description:
+        type: string
+      price:
+        type: integer
+      product_name:
+        type: string
+    type: object
+  controllers.UpdateOrderInput:
+    properties:
+      product_id:
+        type: integer
+    type: object
+  controllers.UpdateProductInput:
+    properties:
+      description:
+        type: string
+      price:
+        type: integer
+      product_name:
+        type: string
+    type: object
   models.Orders:
     properties:
       buyer_id:
@@ -50,6 +80,87 @@ info:
   title: Mini E-commerce REST API
   version: "0.1"
 paths:
+  /order:
+    post:
+      description: Store new Order
+      parameters:
+      - description: Order Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.StoreOrderInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Post Order
+      tags:
+      - Order
+  /order/{id}:
+    delete:
+      description: Delete Order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Delete Order
+      tags:
+      - Order
+    get:
+      description: Get Order by ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Orders'
+      summary: Get Order by ID
+      tags:
+      - Order
+    patch:
+      description: Update Order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Order data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateOrderInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Update Order
+      tags:
+      - Order
   /orders:
     get:
       description: Get list of all available Orders
@@ -65,15 +176,16 @@ paths:
       summary: Get Orders
       tags:
       - Order
+  /product:
     post:
-      description: Create new Order
+      description: Create new Product
       parameters:
-      - description: Order Data
+      - description: product data
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/models.Orders'
+          $ref: '#/definitions/controllers.StoreProductInput'
       produces:
       - application/json
       responses:
@@ -81,9 +193,70 @@ paths:
           description: OK
           schema:
             type: string
-      summary: Post Order
+      summary: Store Product
       tags:
-      - Order
+      - Product
+  /product/{id}:
+    delete:
+      description: Delete Product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Delete Product
+      tags:
+      - Product
+    get:
+      description: Show Product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Products'
+      summary: Get Product by id
+      tags:
+      - Product
+    patch:
+      description: Update Product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateProductInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Update Product
+      tags:
+      - Product
   /products:
     get:
       description: Get list of all available Products
@@ -96,26 +269,7 @@ paths:
             items:
               $ref: '#/definitions/models.Products'
             type: array
-      summary: Get Product
-      tags:
-      - Product
-    post:
-      description: Create new Product
-      parameters:
-      - description: product data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/models.Products'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: Post Product
+      summary: Get Products
       tags:
       - Product
 swagger: "2.0"
