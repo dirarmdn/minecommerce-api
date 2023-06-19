@@ -4,6 +4,7 @@ import (
 	"log"
 	"minecommerce-api/config"
 	"minecommerce-api/models"
+	"minecommerce-api/services"
 	"net/http"
 	"time"
 
@@ -21,7 +22,7 @@ func IndexOrders(ctx *gin.Context) {
 
 	if err := config.DB.Preload("Product").Preload("User").Find(&orders).Error; err != nil {
 		log.Println("error retrieving orders data", err)
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError,  gin.H{
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"error": "failed to retrieve orders",
 		})
 		return
@@ -69,6 +70,7 @@ type StoreOrderInput struct {
 func StoreOrder(ctx *gin.Context) {
 	var input StoreOrderInput
 	var product models.Products
+	var user models.Users
 
 	//  attempts to bind the JSON data from the HTTP request body to the order variable
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -76,7 +78,7 @@ func StoreOrder(ctx *gin.Context) {
 		return
 	}
 
-	// check if product exist or no	
+	// check if product exist or no
 	result := config.DB.Where("ID = ?", input.ProductId).First(&product)
 	if result.Error != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
@@ -85,10 +87,21 @@ func StoreOrder(ctx *gin.Context) {
 		return
 	}
 
+	// check if user exist or no
+	res := config.DB.Where("ID = ?", input.UserId).First(&user)
+	if res.Error != nil {
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"message": "user not found",
+		})
+		return
+	}
+
 	newOrder := models.Orders{
-		ProductId: int(product.Id),
-		UserId:    input.UserId,
-		OrderDate: time.Now(),
+		ProductId:    int(product.Id),
+		UserId:       input.UserId,
+		BuyerAddress: user.Address,
+		BuyerEmail:   user.Email,
+		OrderDate:    time.Now(),
 	}
 
 	// store data
@@ -98,6 +111,8 @@ func StoreOrder(ctx *gin.Context) {
 		})
 		return
 	}
+
+	services.SendMail(newOrder.BuyerEmail, newOrder.BuyerAddress, product.Name)
 
 	ctx.JSON(http.StatusOK, "data successfully added")
 
